@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DespesaRequest;
 use App\Http\Resources\DespesasResource;
+use App\Jobs\sendEmail;
 use App\Models\Despesa;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class DespesasController extends Controller
 {
@@ -29,9 +32,11 @@ class DespesasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function teste()
     {
-        
+        sendEmail::dispatch(auth()->user())->delay(now()->addSeconds('10'));
+
+        dd(DB::select('select * from jobs'),DB::select('select * from failed_jobs'));
     }
 
     /**
@@ -71,6 +76,10 @@ class DespesasController extends Controller
     public function store(DespesaRequest $req) : Response
     {
         try {
+            
+            sendEmail::dispatch(auth()->user()->id)->delay(now()->addSeconds('15'));
+            
+            
             //dd(auth()->user());
             $values = $req->validated();
             $desp = new Despesa();
@@ -79,6 +88,9 @@ class DespesasController extends Controller
             $desp->user = auth()->user()->id;
             $desp->valor = $values['valor'];
             $desp->save();
+
+            
+
             return Response('ok',200);
         } catch (\Throwable $th) {
             throw $th;

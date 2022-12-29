@@ -22,10 +22,12 @@ Route::get('/welcome', function () {
 
 Auth::routes();
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
 Route::apiResources([
     'despesas' => DespesasController::class,
     'user' => UserController::class,
 ]);
+
+Route::get('teste/', [DespesasController::class,'teste']);
