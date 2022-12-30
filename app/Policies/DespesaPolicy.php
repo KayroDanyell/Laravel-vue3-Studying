@@ -33,7 +33,16 @@ class DespesaPolicy
     public function update(User $user,Despesa $despesa){
         
         $dif = Carbon::parse($despesa->data)->diffInDays(Carbon::now());
+        if($despesa->user == $user->id && $dif <=30){
+            return true;
+        }else {
+            return false;
+        }
+    }
 
+    public function destroy(User $user,Despesa $despesa){
+        
+        $dif = Carbon::parse($despesa->data)->diffInDays(Carbon::now());
         if($despesa->user == $user->id && $dif <=30){
             return true;
         }else {

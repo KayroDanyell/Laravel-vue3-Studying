@@ -13,6 +13,7 @@ class notificaUser extends Notification
     use Queueable;
 
     public $user;
+    public $despesa;
     /**
      * Create a new notification instance.
      *

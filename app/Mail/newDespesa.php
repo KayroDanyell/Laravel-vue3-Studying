@@ -16,6 +16,7 @@ class newDespesa extends Mailable
 {
     use Queueable, SerializesModels;
     public $user;
+    public $despesa;
     /**
      * Create a new message instance.
      *
@@ -49,7 +50,7 @@ class newDespesa extends Mailable
     {
         return new Content(
             view: 'emails.newDespesa',
-            with:['user'=>$this->user]
+            with:['user'=>$this->user,'despesa'=>$this->despesa]
         );
     }
 

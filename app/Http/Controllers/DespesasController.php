@@ -107,7 +107,10 @@ class DespesasController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $show = Despesa::find($id);
+        $this->authorize('delete', $show);
+        $show->delete();
+        return DespesasResource::make($show);
     }
 
     /**

@@ -10,7 +10,7 @@
       <th scope="col">Ações</th>
     </tr>
   </thead>
-  <tbody v-for="despesa in despesas">
+  <tbody v-for="despesa in despesas" :key="despesa.id">
     <tr>
       <th scope="row">{{despesa.id}}</th>
       <td>{{despesa.user.name}}</td>
@@ -18,7 +18,7 @@
       <td>{{despesa.valor}}</td>
       <td>{{despesa.short_desc}}</td>
       <td>        
-        <button @click="deletar" class="btn btn-danger">
+        <button @click="deletar(despesa.id)" class="btn btn-danger">
             <i class="bi bi-x-square"></i>
         </button>          
         <button @click="edit(despesa.id)" class="btn btn-warning">
@@ -63,6 +63,22 @@ export default {
         edit(id){
           console.log(id)
           window.location.href= `#/edit?desp=${id}`
+        },
+        async deletar(id){
+            let options = {
+                headers:{
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': this.csrf
+                },
+                method:'DELETE'
+            }
+
+            let despesas = await fetch(`despesas/${id}`,options);
+            if(despesas.status == 403){
+                window.location.href = '#/'
+            }
+
+            despesas = await despesas.json();
         }
     },
     mounted(){
