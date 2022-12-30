@@ -23,8 +23,7 @@ Route::get('/welcome', function () {
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-//!COLOCAR MIDDLEWARE DE AUTENTICAÇÃO 
-//!NAS ROTAS PARA REDIRECIONAR PARA LOGIN QUANDO USER NAO LOGADO
+
 
 Route::apiResources([
     'despesas' => DespesasController::class,
