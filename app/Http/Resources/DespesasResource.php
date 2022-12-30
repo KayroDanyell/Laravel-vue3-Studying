@@ -16,14 +16,15 @@ class DespesasResource extends JsonResource
      */
     public function toArray($request)
     {
+        
         return [
             'id'=> $this->id,
             'short_desc'=> Str::limit($this->desc,10),
             'desc'=> $this->desc,
-            'data'=> Carbon::createFromTimestamp($this->data)->format('d/m/Y'),
+            'data'=> Carbon::parse($this->data)->format('d/m/Y'),
+            'data_datetime'=> explode(' ',$this->data)[0],
             'user'=> UserResource::make($this->User),
             'valor' => $this->valor
         ];
-        //return parent::toArray($request);
     }
 }

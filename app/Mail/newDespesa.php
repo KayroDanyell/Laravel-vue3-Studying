@@ -10,6 +10,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Models\Despesa;
 
 class newDespesa extends Mailable
 {
@@ -20,9 +21,10 @@ class newDespesa extends Mailable
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(User $user,Despesa $despesa)
     {
         $this->user = $user;
+        $this->despesa = $despesa;
     }
 
     /**

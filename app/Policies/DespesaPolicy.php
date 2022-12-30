@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Despesa;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class DespesaPolicy
@@ -20,12 +21,20 @@ class DespesaPolicy
         //
     }
 
-    public function view(User $user){
-        return true;
+    public function view(User $user,Despesa $despesa){
+
+        if($despesa->user == $user->id){
+            return true;
+        }else {
+            return false;
+        }
     }
 
-    public function update(Despesa $despesa){
-        if($despesa->user == auth()->user()->id){
+    public function update(User $user,Despesa $despesa){
+        
+        $dif = Carbon::parse($despesa->data)->diffInDays(Carbon::now());
+
+        if($despesa->user == $user->id && $dif <=30){
             return true;
         }else {
             return false;

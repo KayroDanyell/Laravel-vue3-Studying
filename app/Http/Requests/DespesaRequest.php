@@ -24,8 +24,9 @@ class DespesaRequest extends FormRequest
     public function rules()
     {
         return [
-            'desc' =>'required|max:191',
-            'valor' =>'required|integer',
+            'desc'  =>['required','min:2','max:191'],
+            'date'  =>['required','date','before:tomorrow'],
+            'valor' =>['required','integer','min:1']
         ];
     }
 }

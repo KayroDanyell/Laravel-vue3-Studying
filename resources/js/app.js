@@ -9,6 +9,7 @@ import { createApp } from 'vue';
 import {createRouter,createWebHashHistory} from 'vue-router';
 import List from './components/List.vue';
 import Add from './components/Add.vue';
+import View from './components/View.vue';
 import axios from 'axios'
 
 /**
@@ -18,7 +19,9 @@ import axios from 'axios'
  */
 const rotas = [
     { path: '/', component: List },
-    { path: '/adicionar', component: Add }
+    { path: '/adicionar', component: Add },
+    { path: '/view', component: View },
+    { path: '/edit', component: View }
   ]
 
 const roteador = createRouter({

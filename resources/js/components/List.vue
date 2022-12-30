@@ -17,15 +17,14 @@
       <td>{{despesa.data}}</td>
       <td>{{despesa.valor}}</td>
       <td>{{despesa.short_desc}}</td>
-      <td>
-        
+      <td>        
         <button @click="deletar" class="btn btn-danger">
             <i class="bi bi-x-square"></i>
         </button>          
-        <button @click="editar" class="btn btn-warning">
+        <button @click="edit(despesa.id)" class="btn btn-warning">
             <i class="bi bi-pencil-square"></i>
         </button> 
-        <button @click="visualizar" class="btn btn-primary">
+        <button @click="visualizar(despesa.id)" class="btn btn-primary">
             <i class="bi bi-eye-fill"></i>
         </button> 
       </td>
@@ -51,12 +50,19 @@ export default {
                     'X-CSRF-TOKEN': this.csrf
                 },
                 method:'GET'
-
             }
             let despesas = await fetch('despesas',options)
             despesas = await despesas.json()
             
             this.despesas = despesas.data
+        },
+        visualizar(id){
+          console.log(id)
+          window.location.href= `#/view?desp=${id}`
+        },
+        edit(id){
+          console.log(id)
+          window.location.href= `#/edit?desp=${id}`
         }
     },
     mounted(){

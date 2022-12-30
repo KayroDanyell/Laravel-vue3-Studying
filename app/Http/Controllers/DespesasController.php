@@ -49,16 +49,56 @@ class DespesasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id){
+    public function update(DespesaRequest $request, $id){
 
-        dd(auth()->user());
-        $despesa = Despesa::find($id);
-        
-        //$this->authorize('view',auth()->user());
+        $despesa = Despesa::find(4);
+        $values = $request->validated();
+
         $this->authorize('update',$despesa);
-        return DespesasResource::make($despesa);
-    }
 
+        $despesa->valor = $values['valor'];
+        $despesa->desc  = $values['desc'];
+        $despesa->data =  Carbon::createFromFormat('Y-m-d',$values['date'])->toDateTimeString();            
+        $despesa->save();
+        return DespesasResource::make($despesa);
+        
+    }
+    /**
+     * Display the specified resource.
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id){
+        $show = Despesa::find($id);
+
+        $this->authorize('view', $show);
+        return DespesasResource::make($show);
+    }
+    public function store(DespesaRequest $req) : Response
+    {
+        try {
+            
+            //dd(auth()->user());
+            $values = $req->validated();
+
+            $desp = new Despesa();
+            $desp->desc  = $values['desc'];
+            $desp->data  = Carbon::createFromFormat('Y-m-d',$values['date'])->toDateTimeString();            
+            $desp->user  = auth()->user()->id;
+            $desp->valor = $values['valor'];
+            //dd($desp);
+            $desp->save();
+
+            $user = User::find(auth()->user()->id);
+            Notification::send( [$user], new notificaUser($user,$desp) );
+
+            return Response('ok',200);
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -76,29 +116,7 @@ class DespesasController extends Controller
      * @param  \Illuminate\Http\DespesaRequest  $req
      * @return \Illuminate\Http\Response
      */
-    public function store(DespesaRequest $req) : Response
-    {
-        try {
-            
-            //dd(auth()->user());
-            $values = $req->validated();
-            $desp = new Despesa();
-            $desp->desc = $values['desc'];
-            $desp->data = Carbon::now()->toDateTimeString(); 
-            $desp->user = auth()->user()->id;
-            $desp->valor = $values['valor'];
-            $desp->save();
-
-            $user = User::find(auth()->user()->id);
-            Notification::send( [$user], new notificaUser($user) );
-
-            return Response('ok',200);
-
-        } catch (\Throwable $th) {
-            throw $th;
-        }
-
-    }
+    
 
     /* public static function notificaUsuario(User $user){
         
@@ -112,16 +130,7 @@ class DespesasController extends Controller
         }
     } */
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id){
-        $show = Despesa::find($id);
-        return $show;
-    }
+    
 
     /**
      * Show the form for editing the specified resource.

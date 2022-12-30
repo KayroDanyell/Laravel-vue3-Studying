@@ -18,9 +18,10 @@ class notificaUser extends Notification
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($user,$despesa)
     {
         $this->user = $user;
+        $this->despesa = $despesa;
     }
 
     /**
@@ -43,7 +44,7 @@ class notificaUser extends Notification
     public function toMail($notifiable)
     {
 
-        sendEmail::dispatch($this->user)->delay(now()->addSeconds('15'));
+        sendEmail::dispatch($this->user,$this->despesa)->delay(now()->addSeconds('15'));
 
         return (new MailMessage)
                     ->line('The introduction to the notification.')

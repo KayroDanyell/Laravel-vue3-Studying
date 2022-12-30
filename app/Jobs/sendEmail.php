@@ -11,6 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Despesa;
 
 class sendEmail implements ShouldQueue
 {
@@ -21,9 +22,10 @@ class sendEmail implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(User $user,Despesa $despesa)
     {
         $this->user = $user;
+        $this->despesa = $despesa;
     }
 
     /**
@@ -33,7 +35,7 @@ class sendEmail implements ShouldQueue
      */
     public function handle()
     {
-        Mail::queue((new newDespesa($this->user))
+        Mail::queue((new newDespesa($this->user,$this->despesa))
         ->from('theemail@gmail.com', 'emailProjeto')
         ->to('kayrodanyell@gmail.com', 'kayro')
         );
