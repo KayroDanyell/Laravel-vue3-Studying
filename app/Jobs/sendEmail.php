@@ -34,7 +34,7 @@ class sendEmail implements ShouldQueue
     public function handle()
     {
         Mail::queue((new newDespesa($this->user))
-        ->from('theemail@gmail.com', 'Me')
+        ->from('theemail@gmail.com', 'emailProjeto')
         ->to('kayrodanyell@gmail.com', 'kayro')
         );
     }

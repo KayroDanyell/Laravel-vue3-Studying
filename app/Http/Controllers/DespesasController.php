@@ -6,12 +6,15 @@ use App\Http\Requests\DespesaRequest;
 use App\Http\Resources\DespesasResource;
 use App\Jobs\sendEmail;
 use App\Models\Despesa;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use App\Notifications\notificaUser;
+use Illuminate\Support\Facades\Notification;
 
 class DespesasController extends Controller
 {
@@ -34,7 +37,7 @@ class DespesasController extends Controller
      */
     public function teste()
     {
-        sendEmail::dispatch(auth()->user())->delay(now()->addSeconds('10'));
+        //sendEmail::dispatch(auth()->user())->delay(now()->addSeconds('10'));
 
         dd(DB::select('select * from jobs'),DB::select('select * from failed_jobs'));
     }
@@ -46,8 +49,8 @@ class DespesasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id){
+
         dd(auth()->user());
         $despesa = Despesa::find($id);
         
@@ -77,9 +80,6 @@ class DespesasController extends Controller
     {
         try {
             
-            sendEmail::dispatch(auth()->user()->id)->delay(now()->addSeconds('15'));
-            
-            
             //dd(auth()->user());
             $values = $req->validated();
             $desp = new Despesa();
@@ -89,14 +89,28 @@ class DespesasController extends Controller
             $desp->valor = $values['valor'];
             $desp->save();
 
-            
+            $user = User::find(auth()->user()->id);
+            Notification::send( [$user], new notificaUser($user) );
 
             return Response('ok',200);
+
         } catch (\Throwable $th) {
             throw $th;
         }
 
     }
+
+    /* public static function notificaUsuario(User $user){
+        
+        try{
+            //$tst = sendEmail::dispatch($user)->delay(now()->addSeconds('15'));
+            //$tst1 = $user->notify(new notificaUser($user));
+            $tst = 
+            dd($tst);
+        }catch (\Throwable $th) {
+            throw $th;
+        }
+    } */
 
     /**
      * Display the specified resource.
@@ -104,9 +118,9 @@ class DespesasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
+    public function show($id){
+        $show = Despesa::find($id);
+        return $show;
     }
 
     /**
@@ -119,6 +133,4 @@ class DespesasController extends Controller
     {
         //
     }
-
-    
 }
